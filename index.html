@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Pocket Arcade</title>
+    <meta name="theme-color" content="#07040f">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section id="hero"><canvas id="hc"></canvas>
+        <div id="hi2">
+            <div class="big">POCKET<br>ARCADE</div>
+            <p class="sub">A dozen neon games. One pocket.</p><button id="go">Start</button>
+        </div>
+        <div id="sd">SCROLL<i></i></div>
+    </section>
+    <section id="home">
+        <h2>Choose your game</h2>
+        <div id="df"><button data-d="0">Easy</button><button data-d="1">Normal</button><button
+                data-d="2">Hard</button><button id="st">Sound</button></div>
+        <div id="grid">
+            <button class="gc" data-g="t" style="--cc:#00f0ff"><i class="ic t"></i><b>Tetris</b><span>Stack blocks,
+                    clear lines</span><em id="b-t">Best 0</em></button>
+            <button class="gc" data-g="p" style="--cc:#fff200"><i class="ic p"></i><b>Pac-Man</b><span>Eat dots, dodge
+                    ghosts</span><em id="b-p">Best 0</em></button>
+            <button class="gc" data-g="f" style="--cc:#39ff14"><i class="ic f"></i><b>Flappy</b><span>Tap to fly through
+                    gaps</span><em id="b-f">Best 0</em></button>
+            <button class="gc" data-g="s" style="--cc:#00ffa8"><i class="ic s"></i><b>Snake</b><span>Grow without
+                    crashing</span><em id="b-s">Best 0</em></button>
+            <button class="gc" data-g="g" style="--cc:#ff2bd6"><i class="ic g"></i><b>2048</b><span>Merge tiles to reach
+                    2048</span><em id="b-g">Best 0</em></button>
+            <button class="gc" data-g="b" style="--cc:#ff6a00"><i class="ic b"></i><b>Breakout</b><span>Smash every
+                    brick</span><em id="b-b">Best 0</em></button>
+            <button class="gc" data-g="h" style="--cc:#bf40ff"><i class="ic h"></i><b>Shooter</b><span>Blast the
+                    invaders</span><em id="b-h">Best 0</em></button>
+            <button class="gc" data-g="c" style="--cc:#ff3b3b"><i class="ic c"></i><b>Racer</b><span>Dodge the
+                    traffic</span><em id="b-c">Best 0</em></button>
+            <button class="gc" data-g="m" style="--cc:#4d8dff"><i class="ic m"></i><b>Memory</b><span>Find the matching
+                    pairs</span><em id="b-m">Best 0</em></button>
+            <button class="gc" data-g="w" style="--cc:#ff9d2e"><i class="ic w"></i><b>Whack</b><span>Tap the moles
+                    fast</span><em id="b-w">Best 0</em></button>
+            <button class="gc" data-g="x" style="--cc:#ff9bf0"><i class="ic x"></i><b>Tic Tac Toe</b><span>Beat the
+                    computer</span><em id="b-x">Best 0</em></button>
+            <button class="gc" data-g="k" style="--cc:#c6ff00"><i class="ic k"></i><b>Stack</b><span>Build the tallest
+                    tower</span><em id="b-k">Best 0</em></button>
+        </div>
+    </section>
+    <div id="pm" class="ov">
+        <div class="mb">
+            <h3 id="pt">Paused</h3>
+            <div id="pb"><button id="rs">Resume</button><button id="rr">Restart</button><button id="rm">Menu</button>
+            </div><label>Music<input id="mvs" type="range" min="0" max="1" step=".05"></label><label>Sound effects<input
+                    id="svs" type="range" min="0" max="1" step=".05"></label><label>Vibration<button
+                    id="vbb">On</button></label><button id="pc">Close</button>
+        </div>
+    </div>
+    <div id="hp" class="ov">
+        <div class="mb">
+            <h3 id="ht">How to play</h3>
+            <p id="hx"></p><button id="hg">Got it</button>
+        </div>
+    </div>
+    <div id="play">
+        <header><button id="bk" aria-label="Back to menu">Menu</button>
+            <h1 id="gt">Arcade</h1><button id="pa" aria-label="Pause or resume">Pause</button>
+        </header>
+        <nav aria-label="Games">
+            <button data-g="t" aria-pressed="true">Tetris</button>
+            <button data-g="p" aria-pressed="false">Pac-Man</button>
+            <button data-g="f" aria-pressed="false">Flappy</button>
+            <button data-g="s" aria-pressed="false">Snake</button>
+            <button data-g="g" aria-pressed="false">2048</button>
+            <button data-g="b" aria-pressed="false">Breakout</button>
+        </nav>
+        <div class="hud">
+            <div class="card">Score<b id="sc">0</b></div>
+            <div class="card">Best<b id="hi">0</b></div>
+            <div class="card"><span id="ex">&nbsp;</span></div>
+            <div class="card" id="nxw">Next<canvas id="nx" width="64" height="48"></canvas></div>
+        </div>
+        <canvas id="cv" width="240" height="480" aria-label="Game screen"></canvas>
+        <div id="tip"></div>
+        <div id="pad">
+            <button data-k="left" aria-label="Left">&#9664;</button>
+            <button data-k="up" aria-label="Up">&#9650;</button>
+            <button data-k="down" aria-label="Down">&#9660;</button>
+            <button data-k="right" aria-label="Right">&#9654;</button>
+            <button data-k="act" aria-label="Action">A</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
