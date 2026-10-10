@@ -23,7 +23,7 @@
     <section id="home">
         <h2>Choose your game</h2>
         <div id="df"><button data-d="0">Easy</button><button data-d="1">Normal</button><button
-                data-d="2">Hard</button><button id="st">Sound</button></div>
+                data-d="2">Hard</button><button id="st">Sound</button><button id="btn-open-lb">🏆 Leaders</button></div>
         <div id="grid">
             <button class="gc" data-g="t" style="--cc:#00f0ff"><i class="ic t"></i><b>Tetris</b><span>Stack blocks,
                     clear lines</span><em id="b-t">Best 0</em></button>
@@ -49,6 +49,10 @@
                     computer</span><em id="b-x">Best 0</em></button>
             <button class="gc" data-g="k" style="--cc:#c6ff00"><i class="ic k"></i><b>Stack</b><span>Build the tallest
                     tower</span><em id="b-k">Best 0</em></button>
+            <button class="gc" data-g="i" style="--cc:#00f0ff"><i class="ic i"></i><b>Inbox Zero</b><span>Sort falling
+                    emails fast</span><em id="b-i">Best 0</em></button>
+            <button class="gc" data-g="u" style="--cc:#ff9d2e"><i class="ic u"></i><b>Buzzwords</b><span>Catch skills,
+                    dodge clichés</span><em id="b-u">Best 0</em></button>
         </div>
     </section>
     <div id="pm" class="ov">
@@ -68,7 +72,11 @@
     </div>
     <div id="play">
         <header><button id="bk" aria-label="Back to menu">Menu</button>
-            <h1 id="gt">Arcade</h1><button id="pa" aria-label="Pause or resume">Pause</button>
+            <h1 id="gt">Arcade</h1>
+            <div style="display:flex;gap:6px">
+                <button id="btn-game-lb" aria-label="Leaderboard">🏆</button>
+                <button id="pa" aria-label="Pause or resume">Pause</button>
+            </div>
         </header>
         <nav aria-label="Games">
             <button data-g="t" aria-pressed="true">Tetris</button>
@@ -94,6 +102,57 @@
             <button data-k="act" aria-label="Action">A</button>
         </div>
     </div>
+
+    <!-- Global Leaderboard Modal -->
+    <div id="lbm" class="ov">
+        <div class="mb lb-modal-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="margin:0;">🏆 Top Players</h3>
+                <button id="lb-close" style="padding:4px 10px;font-size:12px;">✕</button>
+            </div>
+            <div id="lb-game-name" style="font-size:13px;color:var(--c);font-weight:bold;margin-top:-4px;">TETRIS</div>
+            <div id="lb-tabs" class="lb-tab-bar"></div>
+            <div id="lb-content" class="lb-list">
+                <div style="color:var(--mute);padding:24px 0;text-align:center;">Loading global scores...</div>
+            </div>
+            <button id="lb-post-challenge" class="btn-linkedin">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24Z"/></svg>
+                Challenge on LinkedIn
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over / Score Submit Modal -->
+    <div id="gom" class="ov">
+        <div class="mb" style="width: min(350px, 100%);">
+            <h3 id="go-title" style="color:var(--b);">Game Over</h3>
+            <div class="go-score-box">
+                <div style="font-size:10px;letter-spacing:1px;color:var(--mute);">FINAL SCORE</div>
+                <div id="go-final-score" class="go-score-val">0</div>
+                <div id="go-best-badge" style="font-size:11px;color:var(--c);margin-top:2px;">Personal Best: 0</div>
+            </div>
+            <div id="go-submit-section">
+                <div class="go-input-row">
+                    <input id="go-player-name" maxlength="12" placeholder="ENTER YOUR NAME" autocomplete="off" spellcheck="false">
+                    <button id="go-submit-btn" class="btn-submit">Save</button>
+                </div>
+                <div id="go-status" style="font-size:10px;color:var(--a);min-height:14px;margin-top:3px;"></div>
+            </div>
+            <button id="go-linkedin-btn" class="btn-linkedin">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24Z"/></svg>
+                Challenge Friends on LinkedIn
+            </button>
+            <div style="display:flex;gap:8px;">
+                <button id="go-play-again" style="flex:1;background:var(--b);border-color:var(--b);color:#fff;">Play Again</button>
+                <button id="go-show-lb" style="flex:1;">Leaderboard</button>
+            </div>
+            <button id="go-menu-btn" style="padding:8px;font-size:11px;">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
 </body>
 

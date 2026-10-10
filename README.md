@@ -1,11 +1,16 @@
 # Pocket Arcade
 
-A neon arcade of 12 games in one page. Built with plain HTML, CSS and JavaScript: no frameworks, no libraries, no build step and no backend. It works on phones (touch) and computers (keyboard and mouse).
+A neon arcade of 14 games in one page. Built with plain HTML, CSS and JavaScript: no frameworks, no libraries, no build step and no backend. It works on phones (touch) and computers (keyboard and mouse).
+
+## 🚀 Live Demo
+Play online now: **[https://hebafatima2490-gif.github.io/pocket-arcade/](https://hebafatima2490-gif.github.io/pocket-arcade/)**
 
 ## Features
 
 - Animated intro page that scrolls into a game menu
-- 12 games, each with its own best score
+- **14 games**, each with its own best score
+- **🏆 Global Leaderboards** powered by Firebase: submit your high score and compete worldwide
+- **🚀 LinkedIn Challenge Integration**: one-click challenge sharing to your LinkedIn feed
 - Easy, Normal and Hard difficulty (best scores are kept separately for each)
 - Touch controls on phones: swipes, taps and drags, with no on-screen buttons
 - Keyboard controls on computers
@@ -20,9 +25,9 @@ A neon arcade of 12 games in one page. Built with plain HTML, CSS and JavaScript
 
 | File | What it does |
 |---|---|
-| `index.html` | Page structure: intro screen, game menu, play screen, pause and how-to popups |
+| `index.html` | Page structure: intro screen, game menu, play screen, pause, leaderboards, and popups |
 | `style.css` | All styling: neon theme, menu cards, layout, popups |
-| `script.js` | All game code, music, settings and screen switching |
+| `script.js` | All game code, music, leaderboards, settings and screen switching |
 
 Keep the three files in the same folder. `index.html` loads the other two by name.
 
@@ -32,28 +37,24 @@ Open `index.html` in a browser. The fonts (Silkscreen and Orbitron) load from Go
 
 If the page looks tiny, your browser is zoomed out. Press Ctrl + 0 (Cmd + 0 on a Mac) to reset the zoom.
 
-## Put it online (free)
-
-- **Netlify Drop:** go to app.netlify.com/drop and drag the folder in. You get a link in seconds.
-- **GitHub Pages:** push the files to a repository, then go to Settings, Pages, and deploy from the main branch.
-- **Vercel or Cloudflare Pages:** import the repository. No build command is needed, and the output folder is the root.
-
 ## The games
 
 | Game | Keyboard | Touch | Score |
 |---|---|---|---|
-| Tetris | Left/Right move, Up rotate, Down soft drop, Space drop | Swipe to move, tap to rotate, flick down to drop | 1 per cleared line |
-| Pac-Man | Arrow keys | Swipe | 1 per dot, big dot or ghost |
+| Tetris | Left/Right move, Up rotate, Down drop, Space drop | Swipe move, swipe up rotate, tap or flick drop | 1 per cleared line |
+| Pac-Man | Arrow keys | Swipe | 1 per dot/ghost; +50 level bonus (endless) |
 | Flappy | Space or Up | Tap | 1 per pipe passed |
 | Snake | Arrow keys | Swipe | 1 per dot eaten |
 | 2048 | Arrow keys | Swipe | Value of merged tiles |
-| Breakout | Left/Right or mouse | Drag | 10 per brick |
+| Breakout | Left/Right or mouse | Drag | 10 per brick; +100 level bonus (endless) |
 | Shooter | Arrow keys or mouse | Drag (ship fires on its own) | 1 per enemy |
 | Racer | Left/Right or mouse | Drag | 1 per car passed |
 | Memory | Click | Tap | 1 per pair (10 misses ends it) |
 | Whack | Click | Tap | 1 per mole (3 escapes ends it) |
 | Tic Tac Toe | Click | Tap | 1 per win against the computer |
 | Stack | Space or Up | Tap | 1 per block placed |
+| Inbox Zero | Left Archive, Down Reply, Right Spam | Tap bottom bins or swipe | 1 per sorted email + streak combos |
+| Buzzwords | Left/Right arrows or mouse | Drag basket | 10 per real skill; dodge toxic clichés |
 
 Other keys: P or Esc pauses. W, A, S, D also work as arrow keys.
 

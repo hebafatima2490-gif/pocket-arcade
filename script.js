@@ -1,5 +1,5 @@
 const cv = document.getElementById('cv'), x = cv.getContext('2d'), $ = id => document.getElementById(id);
-let hs = { t: 0, p: 0, f: 0, s: 0, g: 0, b: 0, h: 0, c: 0, m: 0, w: 0, x: 0, k: 0 };
+let hs = { t: 0, p: 0, f: 0, s: 0, g: 0, b: 0, h: 0, c: 0, m: 0, w: 0, x: 0, k: 0, i: 0, u: 0 };
 try { Object.assign(hs, JSON.parse(localStorage.getItem('arc') || '{}')); if (!hs.v2) { hs.t = hs.p = hs.s = 0; hs.v2 = 1 } } catch (e) { }
 const save = () => { try { localStorage.setItem('arc', JSON.stringify(hs)) } catch (e) { } };
 let cur, score = 0, st = 'ready', overAt = 0;
@@ -10,17 +10,17 @@ const SPD = () => [.75, 1, 1.4][diff];
 function vib(n) { if (vb && navigator.vibrate) try { navigator.vibrate(n) } catch (e) { } }
 const LEAD = [12, 15, 19, 15, 12, 15, 19, 22, 10, 14, 17, 14, 10, 14, 17, 21, 8, 12, 15, 12, 8, 12, 15, 20, 7, 10, 14, 10, 7, 11, 14, 19];
 const MEL = [LEAD, [0, 3, 7, 12, 7, 3, 0, 3, 10, 14, 17, 22, 17, 14, 10, 14, 8, 12, 15, 20, 15, 12, 8, 12, 7, 10, 14, 19, 14, 10, 7, 10], [12, 12, 19, 12, 15, 12, 19, 12, 10, 10, 17, 10, 14, 10, 17, 10, 8, 8, 15, 8, 12, 8, 15, 8, 7, 7, 14, 7, 10, 7, 14, 7], [19, 15, 12, 15, 19, 15, 12, 7, 17, 14, 10, 14, 17, 14, 10, 5, 15, 12, 8, 12, 15, 12, 8, 3, 14, 10, 7, 10, 14, 10, 7, 2]];
-const TRK = { t: [0, .19, 0, 'square'], p: [1, .15, 2, 'square'], f: [2, .22, 5, 'triangle'], s: [3, .17, -3, 'sawtooth'], g: [1, .25, 3, 'triangle'], b: [2, .16, -2, 'square'], h: [3, .14, 0, 'sawtooth'], c: [0, .13, 4, 'square'], m: [1, .22, -5, 'triangle'], w: [2, .18, 7, 'square'], x: [3, .28, 2, 'triangle'], k: [0, .2, -4, 'sawtooth'] };
+const TRK = { t: [0, .19, 0, 'square'], p: [1, .15, 2, 'square'], f: [2, .22, 5, 'triangle'], s: [3, .17, -3, 'sawtooth'], g: [1, .25, 3, 'triangle'], b: [2, .16, -2, 'square'], h: [3, .14, 0, 'sawtooth'], c: [0, .13, 4, 'square'], m: [1, .22, -5, 'triangle'], w: [2, .18, 7, 'square'], x: [3, .28, 2, 'triangle'], k: [0, .2, -4, 'sawtooth'], i: [1, .16, 1, 'square'], u: [2, .15, 3, 'triangle'] };
 function tone(f, t, d, ty, v) { const o = ac.createOscillator(), g = ac.createGain(); o.type = ty; o.frequency.value = f; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + d) }
 function sfx(f, d, ty) { if (ty === 'sawtooth') vib(70); if (ac && sv > 0) tone(f, ac.currentTime, d || .1, ty || 'square', .08 * sv) }
 function tick() { if (!ac) return; const [mi, sp, tr, wv] = TRK[cur.k] || TRK.t; if (nt < ac.currentTime) nt = ac.currentTime; while (nt < ac.currentTime + .3) { if (mv > 0 && st === 'play' && !paused) { const g = wv === 'sawtooth' ? .5 : 1; tone(220 * 2 ** ((MEL[mi][beat % 32] + tr) / 12), nt, sp * .9, wv, .05 * mv * g); if (beat % 2 === 0) tone(110 * 2 ** (([0, -2, -4, -5][beat >> 3 & 3] + tr) / 12), nt, sp * 1.8, 'triangle', .12 * mv) } beat++; nt += sp } }
 function audio() { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)() } catch (e) { return } nt = ac.currentTime + .1; setInterval(tick, 80) } if (ac.state === 'suspended') ac.resume() }
-function over() { if (st === 'over') return; st = 'over'; overAt = Date.now(); save(); sfx(120, .5, 'sawtooth'); vib([80, 50, 160]) }
+function over() { if (st === 'over') return; st = 'over'; overAt = Date.now(); save(); sfx(120, .5, 'sawtooth'); vib([80, 50, 160]); setTimeout(showGameOverModal, 650); }
 function msg(a, b) { x.fillStyle = 'rgba(21,18,46,.85)'; x.fillRect(0, cv.height / 2 - 40, cv.width, 80); x.textAlign = 'center'; x.shadowColor = '#00f0ff'; x.shadowBlur = 10; x.fillStyle = '#00f0ff'; x.font = 'bold 18px Silkscreen,monospace'; x.fillText(a, cv.width / 2, cv.height / 2 - 4); x.shadowBlur = 0; x.fillStyle = '#f4f1ff'; x.font = '11px Silkscreen,monospace'; x.fillText(b, cv.width / 2, cv.height / 2 + 20) }
 
 /* ---------- Tetris ---------- */
 const T = {
-    k: 't', name: 'TETRIS', w: 240, h: 480, tip: 'Arrows move, up rotates, A or space drops.',
+    k: 't', name: 'TETRIS', w: 240, h: 480, tip: 'Arrows move, up rotates, tap, click or space drops.',
     P: [[[1, 1, 1, 1]], [[1, 1], [1, 1]], [[0, 1, 0], [1, 1, 1]], [[0, 1, 1], [1, 1, 0]], [[1, 1, 0], [0, 1, 1]], [[1, 0, 0], [1, 1, 1]], [[0, 0, 1], [1, 1, 1]]],
     C: ['#00f0ff', '#fff200', '#bf40ff', '#39ff14', '#ff2bd6', '#2d6bff', '#ff6a00'],
     init() { this.g = Array.from({ length: 20 }, () => Array(10).fill(0)); this.lines = 0; this.acc = 0; this.nx = null; this.bag = null; this.end = 'GAME OVER'; this.spawn(); setScore(0); $('ex').textContent = 'Lines 0' },
@@ -41,19 +41,23 @@ const T = {
 const MAZE = ["###############", "#o.....#.....o#", "#.##.#.#.#.##.#", "#.............#", "#.##.#####.##.#", "#.............#", "#.##.#.#.#.##.#", "#....#...#....#", "#.##.#####.##.#", "#.............#", "#.##.#.#.#.##.#", "#o.....#.....o#", "###############"];
 const P = {
     k: 'p', name: 'PAC-MAN', w: 300, h: 260, tip: 'Arrows steer. Eat every dot. Big dots let you eat ghosts.',
-    init() { this.d = MAZE.map(r => r.split(''));[[6, 7], [7, 7], [8, 7], [7, 9]].forEach(([c, r]) => this.d[r][c] = ' '); this.dots = this.d.flat().filter(v => v === '.' || v === 'o').length; this.lives = 3; this.end = 'GAME OVER'; this.gs = [[6, '#ff2bd6'], [7, '#00f0ff'], [8, '#ff6a00']].map(([c, col]) => ({ c0: c, r0: 7, col })); this.reset(); setScore(0); $('ex').textContent = '\u2665'.repeat(3) },
+    init() { this.lvl = 1; this.loadMaze(); this.lives = 3; this.end = 'GAME OVER'; this.gs = [[6, '#ff2bd6'], [7, '#00f0ff'], [8, '#ff6a00']].map(([c, col]) => ({ c0: c, r0: 7, col })); this.reset(); setScore(0); this.updEx() },
+    updEx() { $('ex').textContent = '\u2665'.repeat(this.lives) + (this.lvl > 1 ? ' · L' + this.lvl : '') },
+    loadMaze() { this.d = MAZE.map(r => r.split(''));[[6, 7], [7, 7], [8, 7], [7, 9]].forEach(([c, r]) => this.d[r][c] = ' '); this.dots = this.d.flat().filter(v => v === '.' || v === 'o').length },
+    nextLevel() { this.lvl++; setScore(score + 50); sfx(880, .25); vib([80, 50, 80]); this.loadMaze(); this.reset(); this.updEx() },
     reset() { if (this.p && st === 'play') vib(120); this.p = { c: 7, r: 9, dc: 0, dr: 0, t: 0, want: null, fd: null }; this.fright = 0; this.gs.forEach((g, i) => { this.rs(g); g.w = 1200 + i * 900 }) },
     rs(g) { g.c = g.c0; g.r = g.r0; g.dc = g.dr = 0; g.t = 0; g.pd = [0, 0]; g.w = 1500 },
     ok(c, r) { return this.d[r] && this.d[r][c] !== '#' },
     mv(e, dt, sp, pick) { if (!e.dc && !e.dr) pick(e); if (!e.dc && !e.dr) return; e.t += dt * sp / 1000; if (e.t >= 1) { e.c += e.dc; e.r += e.dr; e.t = 0; e.dc = e.dr = 0; this.arrive(e); if (st === 'play') pick(e) } },
     pp(e) { const w = e.want; if (w && this.ok(e.c + w[0], e.r + w[1])) { e.dc = w[0]; e.dr = w[1]; e.fd = w } else if (e.fd && this.ok(e.c + e.fd[0], e.r + e.fd[1])) { e.dc = e.fd[0]; e.dr = e.fd[1] } },
     gp(e) { const ds = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(d => this.ok(e.c + d[0], e.r + d[1])); let f = ds.filter(d => !(d[0] === -e.pd[0] && d[1] === -e.pd[1])); if (!f.length) f = ds; const q = this.p, dist = d => Math.hypot(e.c + d[0] - q.c, e.r + d[1] - q.r); const d = (this.fright > 0 || Math.random() < .25) ? f[Math.random() * f.length | 0] : f.sort((a, b) => dist(a) - dist(b))[0]; e.dc = d[0]; e.dr = d[1]; e.pd = d },
-    arrive(e) { if (e !== this.p) return; const v = this.d[e.r][e.c]; if (v === '.' || v === 'o') { this.d[e.r][e.c] = ' '; this.dots--; setScore(score + 1); if (v === 'o') { this.fright = 6000; sfx(300, .3) } if (!this.dots) { this.end = 'YOU WIN!'; over() } } },
+    arrive(e) { if (e !== this.p) return; const v = this.d[e.r][e.c]; if (v === '.' || v === 'o') { this.d[e.r][e.c] = ' '; this.dots--; setScore(score + 1); if (v === 'o') { this.fright = Math.max(2500, 6000 - (this.lvl - 1) * 600); sfx(300, .3) } if (!this.dots) this.nextLevel() } },
     update(dt) {
         const p = this.p; this.fright = Math.max(0, this.fright - dt); this.mv(p, dt, 6.5, e => this.pp(e)); if (st !== 'play') return;
-        for (const g of this.gs) { if (g.w > 0) { g.w -= dt; continue } this.mv(g, dt, this.fright > 0 ? 3.5 : 5 * SPD(), e => this.gp(e)) }
+        const gSpd = this.fright > 0 ? 3.5 : (5 + Math.min(2.5, (this.lvl - 1) * 0.4)) * SPD();
+        for (const g of this.gs) { if (g.w > 0) { g.w -= dt; continue } this.mv(g, dt, gSpd, e => this.gp(e)) }
         const a = p.c + p.dc * p.t, b = p.r + p.dr * p.t;
-        for (const g of this.gs) { if (g.w > 0) continue; if (Math.hypot(g.c + g.dc * g.t - a, g.r + g.dr * g.t - b) < .6) { if (this.fright > 0) { setScore(score + 1); sfx(900, .15); this.rs(g) } else { this.lives--; $('ex').textContent = '\u2665'.repeat(this.lives); if (this.lives <= 0) over(); else this.reset(); return } } }
+        for (const g of this.gs) { if (g.w > 0) continue; if (Math.hypot(g.c + g.dc * g.t - a, g.r + g.dr * g.t - b) < .6) { if (this.fright > 0) { setScore(score + 1); sfx(900, .15); this.rs(g) } else { this.lives--; this.updEx(); if (this.lives <= 0) over(); else this.reset(); return } } }
     },
     key(k) { const D = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] }[k]; if (!D) return; const p = this.p; p.want = D; if ((p.dc || p.dr) && D[0] === -p.dc && D[1] === -p.dr) { p.c += p.dc; p.r += p.dr; p.dc = -p.dc; p.dr = -p.dr; p.t = 1 - p.t; p.fd = D } },
     draw() {
@@ -107,13 +111,16 @@ const G = {
 /* Breakout */
 const B = {
     k: 'b', name: 'BREAKOUT', w: 320, h: 420, tip: 'Drag or use arrows to move the paddle. Break every brick.',
-    init() { this.pw = 64; this.px = 128; this.bx = 160; this.by = 360; this.vx = .17; this.vy = -.25; this.br = []; for (let r = 0; r < 5; r++)for (let c = 0; c < 8; c++)this.br.push({ x: c * 40 + 2, y: r * 20 + 40, a: 1, r }); this.lives = 3; this.end = 'GAME OVER'; setScore(0); $('ex').textContent = '♥'.repeat(3) },
+    init() { this.lvl = 1; this.setupBricks(); this.pw = 64; this.px = 128; this.bx = 160; this.by = 360; this.vx = .17; this.vy = -.25; this.lives = 3; this.end = 'GAME OVER'; setScore(0); this.updEx() },
+    updEx() { $('ex').textContent = '♥'.repeat(this.lives) + (this.lvl > 1 ? ' · L' + this.lvl : '') },
+    setupBricks() { this.br = []; for (let r = 0; r < 5; r++)for (let c = 0; c < 8; c++)this.br.push({ x: c * 40 + 2, y: r * 20 + 40, a: 1, r }) },
+    nextLevel() { this.lvl++; setScore(score + 100); sfx(880, .25); vib([80, 50, 80]); this.setupBricks(); this.bx = 160; this.by = 360; this.vx = (Math.random() < .5 ? 1 : -1) * (0.17 + Math.min(0.12, (this.lvl - 1) * 0.02)); this.vy = -(0.25 + Math.min(0.15, (this.lvl - 1) * 0.03)); this.updEx() },
     update(dt) {
         this.px = Math.max(0, Math.min(this.w - this.pw, this.px)); const q = SPD(); this.bx += this.vx * q * dt; this.by += this.vy * q * dt;
         if (this.bx < 6) { this.bx = 6; this.vx = Math.abs(this.vx) } if (this.bx > 314) { this.bx = 314; this.vx = -Math.abs(this.vx) } if (this.by < 6) { this.by = 6; this.vy = Math.abs(this.vy) }
         if (this.vy > 0 && this.by >= 386 && this.by <= 402 && this.bx > this.px - 6 && this.bx < this.px + this.pw + 6) { this.vy = -Math.abs(this.vy); this.vx = (this.bx - this.px - this.pw / 2) / (this.pw / 2) * .26; sfx(400, .05) }
-        for (const b of this.br) { if (b.a && this.bx > b.x - 6 && this.bx < b.x + 42 && this.by > b.y - 6 && this.by < b.y + 22) { b.a = 0; this.vy = -this.vy; setScore(score + 10); sfx(300 + b.r * 80, .06); if (!this.br.some(q => q.a)) { this.end = 'YOU WIN!'; over() } break } }
-        if (this.by > 430) { this.lives--; $('ex').textContent = '♥'.repeat(this.lives); if (this.lives <= 0) over(); else { this.bx = 160; this.by = 360; this.vx = .17; this.vy = -.25 } }
+        for (const b of this.br) { if (b.a && this.bx > b.x - 6 && this.bx < b.x + 42 && this.by > b.y - 6 && this.by < b.y + 22) { b.a = 0; this.vy = -this.vy; setScore(score + 10); sfx(300 + b.r * 80, .06); if (!this.br.some(q => q.a)) this.nextLevel(); break } }
+        if (this.by > 430) { this.lives--; this.updEx(); if (this.lives <= 0) over(); else { this.bx = 160; this.by = 360; this.vx = .17; this.vy = -.25 } }
     },
     key(k) { if (k === 'left') this.px -= 36; else if (k === 'right') this.px += 36 },
     draw() { x.fillStyle = '#05020c'; x.fillRect(0, 0, 320, 420); const R = ['#ff2bd6', '#ff6a00', '#fff200', '#39ff14', '#00f0ff']; for (const b of this.br) if (b.a) { x.shadowColor = R[b.r]; x.shadowBlur = 8; x.fillStyle = R[b.r]; x.fillRect(b.x, b.y, 36, 16) } x.shadowColor = '#00f0ff'; x.shadowBlur = 12; x.fillStyle = '#00f0ff'; x.fillRect(this.px, 396, this.pw, 10); x.shadowColor = '#fff'; x.fillStyle = '#fff'; x.beginPath(); x.arc(this.bx, this.by, 6, 0, 7); x.fill(); x.shadowBlur = 0 }
@@ -236,22 +243,215 @@ const SK = {
         if (st === 'play') { const c = 'hsl(' + (n * 25 % 360) + ',100%,60%)'; x.shadowColor = c; x.fillStyle = c; x.fillRect(this.cx, Y(n), this.cw, 22) } x.shadowBlur = 0
     }
 };
-const games = { t: T, p: P, f: F, s: S, g: G, b: B, h: SH, c: CR, m: M, w: WH, x: XO, k: SK };
+/* ---------- Inbox Zero Rush ---------- */
+const IZ = {
+    k: 'i', name: 'INBOX ZERO', w: 320, h: 480, tip: 'Sort emails: Left = Archive, Down = Reply, Right = Spam.',
+    SUBJECTS: [
+        { c: 0, text: 'CLIENT URGENT' }, { c: 0, text: 'INTERVIEW OFFER' }, { c: 0, text: 'CODE REVIEW' }, { c: 0, text: 'CRITICAL BUG' },
+        { c: 1, text: 'WEEKLY DIGEST' }, { c: 1, text: 'ALL-HANDS RECAP' }, { c: 1, text: 'FYI: STATS' }, { c: 1, text: 'NEWSLETTER' },
+        { c: 2, text: 'YOU WON $10M!' }, { c: 2, text: 'CRYPTO MOON 🚀' }, { c: 2, text: 'BUY BACKLINKS' }, { c: 2, text: 'INHERITANCE' }
+    ],
+    init() {
+        this.ems = []; this.lives = 3; this.sp = 400; this.t = 0; this.combo = 0;
+        this.feedback = null; this.end = 'INBOX OVERFLOW!'; setScore(0); this.updEx();
+    },
+    updEx() { $('ex').textContent = '♥'.repeat(this.lives) + (this.combo > 1 ? ' · ' + this.combo + 'x' : '') },
+    spawn() {
+        const item = this.SUBJECTS[Math.random() * this.SUBJECTS.length | 0];
+        this.ems.push({ x: 20 + Math.random() * 80, y: -40, c: item.c, text: item.text, w: 200, h: 36 });
+    },
+    sort(cat) {
+        if (st !== 'play' || paused || !this.ems.length) return;
+        const sorted = this.ems.reduce((lowest, e) => (!lowest || e.y > lowest.y ? e : lowest), null);
+        if (!sorted) return;
+        this.ems = this.ems.filter(e => e !== sorted);
+        if (sorted.c === cat) {
+            this.combo++;
+            setScore(score + 1 + (this.combo > 4 ? 1 : 0));
+            sfx(650 + Math.min(this.combo, 8) * 50, .08);
+            vib(30);
+            this.feedback = { text: '✓ NICE!', col: '#39ff14', t: 300, y: sorted.y };
+        } else {
+            this.combo = 0;
+            this.lives--;
+            sfx(120, .3, 'sawtooth');
+            vib([70, 40, 70]);
+            this.feedback = { text: '✗ WRONG BIN!', col: '#ff3b3b', t: 400, y: sorted.y };
+            if (this.lives <= 0) over();
+        }
+        this.updEx();
+    },
+    update(dt) {
+        this.t += dt; this.sp -= dt;
+        const rate = Math.max(700, 1600 - score * 20);
+        if (this.sp <= 0) { this.spawn(); this.sp = rate; }
+        if (this.feedback) { this.feedback.t -= dt; if (this.feedback.t <= 0) this.feedback = null; }
+        const v = (0.12 + Math.min(0.25, score * 0.006)) * SPD();
+        for (const e of this.ems) {
+            e.y += v * dt;
+            if (e.y > 385) {
+                e.dead = 1; this.combo = 0; this.lives--;
+                sfx(120, .3, 'sawtooth'); vib(100);
+                this.feedback = { text: 'MISSED DEADLINE!', col: '#ff3b3b', t: 400, y: 380 };
+                this.updEx();
+                if (this.lives <= 0) { over(); break; }
+            }
+        }
+        this.ems = this.ems.filter(e => !e.dead);
+    },
+    key(k) {
+        if (k === 'left') this.sort(1);
+        else if (k === 'down' || k === 'act') this.sort(0);
+        else if (k === 'right') this.sort(2);
+    },
+    draw() {
+        x.fillStyle = '#05020c'; x.fillRect(0, 0, 320, 480);
+        x.strokeStyle = 'rgba(255, 43, 214, 0.4)'; x.setLineDash([4, 4]);
+        x.beginPath(); x.moveTo(0, 385); x.lineTo(320, 385); x.stroke(); x.setLineDash([]);
+        const cols = ['#00f0ff', '#39ff14', '#ff2bd6'];
+        const tags = ['REPLY', 'ARCHIVE', 'SPAM'];
+        for (const e of this.ems) {
+            const col = cols[e.c];
+            x.shadowColor = col; x.shadowBlur = 8;
+            x.fillStyle = '#120a24'; x.strokeStyle = col; x.lineWidth = 2;
+            x.fillRect(e.x, e.y, e.w, e.h); x.strokeRect(e.x, e.y, e.w, e.h); x.shadowBlur = 0;
+            x.fillStyle = col; x.fillRect(e.x + 4, e.y + 4, 48, 12);
+            x.fillStyle = '#05020c'; x.font = 'bold 8px Silkscreen,monospace'; x.textAlign = 'center';
+            x.fillText(tags[e.c], e.x + 28, e.y + 13);
+            x.fillStyle = '#fff'; x.font = '10px Silkscreen,monospace'; x.textAlign = 'left';
+            x.fillText(e.text, e.x + 58, e.y + 22);
+        }
+        const bins = [
+            { x: 8, w: 96, c: '#39ff14', label: '📂 ARCHIVE', sub: '← LEFT' },
+            { x: 112, w: 96, c: '#00f0ff', label: '📩 REPLY', sub: '↓ DOWN' },
+            { x: 216, w: 96, c: '#ff2bd6', label: '🗑️ SPAM', sub: '→ RIGHT' }
+        ];
+        bins.forEach(b => {
+            x.shadowColor = b.c; x.shadowBlur = 8;
+            x.fillStyle = '#0d061c'; x.strokeStyle = b.c; x.lineWidth = 2;
+            x.fillRect(b.x, 410, b.w, 60); x.strokeRect(b.x, 410, b.w, 60); x.shadowBlur = 0;
+            x.fillStyle = b.c; x.font = 'bold 10px Silkscreen,monospace'; x.textAlign = 'center';
+            x.fillText(b.label, b.x + b.w / 2, 434);
+            x.fillStyle = 'rgba(255,255,255,0.6)'; x.font = '9px Silkscreen,monospace';
+            x.fillText(b.sub, b.x + b.w / 2, 454);
+        });
+        if (this.feedback) {
+            x.fillStyle = this.feedback.col; x.shadowColor = this.feedback.col; x.shadowBlur = 10;
+            x.font = 'bold 14px Silkscreen,monospace'; x.textAlign = 'center';
+            x.fillText(this.feedback.text, 160, this.feedback.y || 200); x.shadowBlur = 0;
+        }
+    }
+};
+
+/* ---------- Buzzword Catcher ---------- */
+const BC = {
+    k: 'u', name: 'BUZZWORDS', w: 320, h: 480, tip: 'Move basket: Catch real skills (green), dodge corporate buzzwords (red)!',
+    SKILLS: ['PYTHON', 'REACT', 'SQL', 'GIT', 'DOCKER', 'API', 'CSS', 'FASTAPI', 'LOGIC', 'TESTS'],
+    BUZZ: ['SYNERGY', 'ROCKSTAR', 'NINJA', 'GURU', 'DISRUPT', '10X DEV', 'PIVOT', 'BOIL OCEAN', 'CIRCLE BACK'],
+    init() {
+        this.x = 160; this.pw = 72; this.items = []; this.lives = 3; this.sp = 300; this.t = 0; this.streak = 0;
+        this.end = 'BURNT OUT!'; setScore(0); this.updEx();
+    },
+    updEx() { $('ex').textContent = '♥'.repeat(this.lives) + (this.streak > 2 ? ' · ' + this.streak + '★' : '') },
+    spawn() {
+        const isSkill = Math.random() < 0.6;
+        const pool = isSkill ? this.SKILLS : this.BUZZ;
+        const text = pool[Math.random() * pool.length | 0];
+        this.items.push({ x: 24 + Math.random() * 210, y: -25, isSkill: isSkill, text: text, w: 80, h: 24, v: (0.13 + Math.min(0.24, this.t / 120000)) * SPD() });
+    },
+    update(dt) {
+        this.t += dt; this.sp -= dt;
+        if (this.sp <= 0) { this.spawn(); this.sp = Math.max(380, 950 - this.t / 80); }
+        this.x = Math.max(this.pw / 2, Math.min(320 - this.pw / 2, this.x));
+        for (const item of this.items) {
+            item.y += item.v * dt;
+            if (item.y + item.h >= 430 && item.y <= 450) {
+                if (item.x + item.w > this.x - this.pw / 2 && item.x < this.x + this.pw / 2) {
+                    item.dead = 1;
+                    if (item.isSkill) {
+                        this.streak++;
+                        setScore(score + 10 + (this.streak > 4 ? 5 : 0));
+                        sfx(600 + Math.min(this.streak, 8) * 40, .09);
+                        vib(30);
+                    } else {
+                        this.streak = 0;
+                        this.lives--;
+                        sfx(120, .3, 'sawtooth');
+                        vib([80, 50, 100]);
+                        if (this.lives <= 0) over();
+                    }
+                    this.updEx();
+                }
+            }
+        }
+        this.items = this.items.filter(item => !item.dead && item.y < 500);
+    },
+    key(k) { if (k === 'left') this.x -= 32; else if (k === 'right') this.x += 32; },
+    draw() {
+        x.fillStyle = '#05020c'; x.fillRect(0, 0, 320, 480);
+        for (const it of this.items) {
+            const col = it.isSkill ? '#39ff14' : '#ff3b3b';
+            x.shadowColor = col; x.shadowBlur = 8;
+            x.fillStyle = it.isSkill ? 'rgba(57, 255, 20, 0.12)' : 'rgba(255, 59, 59, 0.15)';
+            x.strokeStyle = col; x.lineWidth = 2;
+            x.fillRect(it.x, it.y, it.w, it.h); x.strokeRect(it.x, it.y, it.w, it.h); x.shadowBlur = 0;
+            x.fillStyle = col; x.font = 'bold 9px Silkscreen,monospace'; x.textAlign = 'center';
+            x.fillText(it.text, it.x + it.w / 2, it.y + 16);
+        }
+        const bx = this.x - this.pw / 2;
+        x.shadowColor = '#00f0ff'; x.shadowBlur = 12;
+        x.fillStyle = '#120a24'; x.strokeStyle = '#00f0ff'; x.lineWidth = 3;
+        x.fillRect(bx, 432, this.pw, 18); x.strokeRect(bx, 432, this.pw, 18); x.shadowBlur = 0;
+        x.fillStyle = '#00f0ff'; x.font = 'bold 9px Orbitron,monospace'; x.textAlign = 'center';
+        x.fillText('RESUME', this.x, 445);
+    }
+};
+
+const games = { t: T, p: P, f: F, s: S, g: G, b: B, h: SH, c: CR, m: M, w: WH, x: XO, k: SK, i: IZ, u: BC };
 function fit() { if (!cur) return; const bs = getComputedStyle($('play')), g = parseFloat(bs.rowGap) || 12, pd = parseFloat(bs.paddingTop) * 2; const o = [...$('play').children].reduce((a, e) => e === cv || e.tagName === 'SCRIPT' || !e.offsetHeight ? a : a + e.offsetHeight + g, 0) + pd + g + 6; const s = Math.min(2, Math.max(.3, Math.min((innerWidth - pd - 8) / cur.w, (innerHeight - o) / cur.h))); cv.style.width = cur.w * s + 6 + 'px'; cv.style.height = cur.h * s + 6 + 'px' }
 function select(k) { cur = games[k]; cv.width = cur.w; cv.height = cur.h; setPause(false); $('nxw').style.display = k === 't' ? '' : 'none'; fit(); $('hi').textContent = hs[bk(k)] || 0; $('tip').textContent = matchMedia('(pointer:coarse)').matches ? TT[cur.k] : cur.tip; $('gt').textContent = cur.name; cur.init(); st = 'ready'; document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-pressed', b.dataset.g === k)) }
 function setPause(v) { paused = v; pmShow(v ? 'pause' : null) }
 function pmShow(m) { const p = $('pm'); if (!m) { p.classList.remove('open'); return } $('pt').textContent = m === 'pause' ? 'Paused · ' + ['Easy', 'Normal', 'Hard'][diff] : 'Settings'; $('pb').style.display = m === 'pause' ? '' : 'none'; $('pc').style.display = m === 'pause' ? 'none' : ''; $('mvs').value = mv; $('svs').value = sv; $('vbb').textContent = vb ? 'On' : 'Off'; p.classList.add('open') }
-function press(k) { if (!$('play').classList.contains('open')) return; audio(); if (k === 'pause') { if (st === 'play') setPause(!paused); return } if (paused) { setPause(false); return } if (st !== 'play') { if (Date.now() - overAt < 500) return; cur.init(); st = 'play' } cur.key(k) }
+function press(k) { if (!$('play').classList.contains('open')) return; audio(); if (k === 'pause') { if (st === 'play') setPause(!paused); return } if (paused) { setPause(false); return } if (st !== 'play') { if (Date.now() - overAt < 500) return; cur.init(); st = 'play'; return } cur.key(k) }
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => select(b.dataset.g));
 document.querySelectorAll('#pad button').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); press(b.dataset.k) }));
-const TT = { t: 'Swipe left or right to move. Tap to rotate. Flick down to drop.', p: 'Swipe to steer Pac-Man.', f: 'Tap anywhere to flap.', s: 'Swipe to steer the snake.', g: 'Swipe to slide the tiles.', b: 'Drag your finger to move the paddle.', h: 'Drag your finger to fly. Your ship fires on its own.', c: 'Drag left or right to steer. Dodge the traffic.', m: 'Tap two cards to find a matching pair.', w: 'Tap the moles before they hide.', x: 'Tap a square to place your X.', k: 'Tap to drop the sliding block.' };
-function aim(e) { if ((cur.k === 'h' || cur.k === 'c') && st === 'play' && !paused) { const r = cv.getBoundingClientRect(); cur.x = (e.clientX - r.left) / r.width * cur.w; if (cur.k === 'h') cur.y = (e.clientY - r.top) / r.height * cur.h - 50 } }
+const TT = { t: 'Swipe to move. Tap or click to drop. Swipe up to rotate.', p: 'Swipe to steer Pac-Man.', f: 'Tap anywhere to flap.', s: 'Swipe to steer the snake.', g: 'Swipe to slide the tiles.', b: 'Drag your finger to move the paddle.', h: 'Drag your finger to fly. Your ship fires on its own.', c: 'Drag left or right to steer. Dodge the traffic.', m: 'Tap two cards to find a matching pair.', w: 'Tap the moles before they hide.', x: 'Tap a square to place your X.', k: 'Tap to drop the sliding block.', i: 'Tap bottom bins or swipe: Left = Archive, Down = Reply, Right = Spam.', u: 'Drag left or right to move the resume basket.' };
+function aim(e) { if ((cur.k === 'h' || cur.k === 'c' || cur.k === 'u') && st === 'play' && !paused) { const r = cv.getBoundingClientRect(); cur.x = (e.clientX - r.left) / r.width * cur.w; if (cur.k === 'h') cur.y = (e.clientY - r.top) / r.height * cur.h - 50 } }
 let sw = null; const dirOf = (dx, dy) => Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
-cv.addEventListener('pointerdown', e => { e.preventDefault(); if (cur.k === 'm' || cur.k === 'w' || cur.k === 'x') { const wp = paused; press('act'); if (!wp) cur.tap(e); return } if (cur.k === 'f' || cur.k === 'h' || cur.k === 'c') { press('act'); aim(e); return } sw = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, t: Date.now(), m: 0 } });
+cv.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    if (cur.k === 'i' && st === 'play' && !paused) {
+        const r = cv.getBoundingClientRect(), px = (e.clientX - r.left) / r.width * 320;
+        if (px < 105) press('left');
+        else if (px > 215) press('right');
+        else press('down');
+        return;
+    }
+    if (cur.k === 'm' || cur.k === 'w' || cur.k === 'x') { const wp = paused; press('act'); if (!wp) cur.tap(e); return }
+    if (cur.k === 'f' || cur.k === 'h' || cur.k === 'c' || cur.k === 'u') { press('act'); aim(e); return }
+    sw = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, t: Date.now(), m: 0 }
+});
 cv.addEventListener('pointercancel', () => { sw = null });
 cv.addEventListener('pointerup', e => {
     if (!sw) return; const s = sw; sw = null; const dx = e.clientX - s.x, dy = e.clientY - s.y, mv = Math.max(Math.abs(dx), Math.abs(dy));
-    if (cur.k === 't') { if (!s.m && mv < 12) press('up'); else if (dy > 50 && dy / Math.max(1, Date.now() - s.t) > .7) press('act'); return }
+    if (cur.k === 'i') {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 18) {
+            press(dx < 0 ? 'left' : 'right');
+        } else if (dy > 18 || mv < 16) {
+            press('down');
+        }
+        return;
+    }
+    if (cur.k === 't') {
+        if (!s.m && mv < 16) {
+            press('act');
+        } else if (dy < -25 && Math.abs(dy) > Math.abs(dx)) {
+            press('up');
+        } else if (dy > 40 && dy / Math.max(1, Date.now() - s.t) > .6) {
+            press('act');
+        }
+        return;
+    }
     if (cur.k === 'g') { press(mv >= 24 ? dirOf(dx, dy) : 'act'); return }
     if (cur.k === 'b' || (!s.m && mv < 20)) press('act')
 });
@@ -290,3 +490,185 @@ function hero(t) {
 }
 requestAnimationFrame(hero);
 select('t'); requestAnimationFrame(loop);
+
+/* ---------- Firebase Global Leaderboard & LinkedIn Challenge ---------- */
+const firebaseConfig = {
+    projectId: "studio-7481561832-42137",
+    appId: "1:432376818880:web:778ee81cbf585d9fd4d125",
+    storageBucket: "studio-7481561832-42137.firebasestorage.app",
+    apiKey: "AIzaSyDk8sOP4kqKkf1hmzt6sgR34ks3VDPyw54",
+    authDomain: "studio-7481561832-42137.firebaseapp.com",
+    messagingSenderId: "432376818880",
+    projectNumber: "432376818880"
+};
+
+let db = null;
+try {
+    if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+    }
+} catch (e) {
+    console.warn('Firebase init:', e);
+}
+
+function showGameOverModal() {
+    if (st !== 'over' || !cur) return;
+    $('go-title').textContent = cur.end || 'GAME OVER';
+    $('go-final-score').textContent = score;
+    const b = bk(cur.k);
+    const best = hs[b] || 0;
+    $('go-best-badge').textContent = (score >= best && score > 0) ? '★ NEW PERSONAL BEST!' : ('Personal Best: ' + best);
+    $('go-player-name').value = localStorage.getItem('arc_player_name') || '';
+    $('go-status').textContent = '';
+    $('go-submit-btn').disabled = false;
+    $('go-submit-btn').textContent = 'Save';
+    $('gom').classList.add('open');
+}
+
+function closeGameOverModal() {
+    $('gom').classList.remove('open');
+}
+
+async function submitScore() {
+    if (!cur) return;
+    const nameInput = $('go-player-name');
+    let name = (nameInput.value || '').trim().toUpperCase();
+    if (!name) name = 'PLAYER';
+    localStorage.setItem('arc_player_name', name);
+    $('go-submit-btn').disabled = true;
+    $('go-submit-btn').textContent = '...';
+    $('go-status').textContent = 'Saving to leaderboard...';
+
+    if (!db) {
+        $('go-status').textContent = '✓ Saved locally!';
+        $('go-submit-btn').textContent = 'Saved';
+        return;
+    }
+
+    try {
+        await db.collection('pocket_arcade').doc(cur.k).collection('scores').add({
+            name: name.slice(0, 12),
+            score: Number(score),
+            diff: diff,
+            created: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        $('go-status').textContent = '✓ Global score submitted!';
+        $('go-submit-btn').textContent = 'Saved';
+    } catch (err) {
+        console.error('Score submit error:', err);
+        $('go-status').textContent = '✓ Saved locally!';
+        $('go-submit-btn').textContent = 'Saved';
+    }
+}
+
+function shareOnLinkedIn(gameName, finalScore) {
+    const url = 'https://hebafatima2490-gif.github.io/pocket-arcade/';
+    const postText = `🕹️ Can you beat my high score of ${finalScore} in ${gameName} on Pocket Arcade?\n\nPlay directly in your browser: ${url}\n\n#WebDevelopment #JavaScript #RetroGaming #PocketArcade #IndieDev`;
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(postText).catch(() => {});
+    }
+
+    if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
+        navigator.share({
+            title: 'Pocket Arcade Challenge',
+            text: postText,
+            url: url
+        }).catch(() => {});
+        return;
+    }
+
+    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    window.open(shareUrl, '_blank', 'width=640,height=600');
+}
+
+let activeLbGame = 't';
+
+async function openLeaderboard(gameKey) {
+    activeLbGame = gameKey || (cur ? cur.k : 't');
+    $('lbm').classList.add('open');
+    renderLeaderboardTabs();
+    await loadLeaderboardScores(activeLbGame);
+}
+
+function renderLeaderboardTabs() {
+    const bar = $('lb-tabs');
+    bar.innerHTML = '';
+    for (const k in games) {
+        const btn = document.createElement('button');
+        btn.textContent = games[k].name;
+        if (k === activeLbGame) btn.classList.add('active');
+        btn.onclick = () => {
+            activeLbGame = k;
+            renderLeaderboardTabs();
+            loadLeaderboardScores(k);
+        };
+        bar.appendChild(btn);
+    }
+    $('lb-game-name').textContent = games[activeLbGame] ? games[activeLbGame].name : 'ARCADE';
+}
+
+async function loadLeaderboardScores(gameKey) {
+    const content = $('lb-content');
+    content.innerHTML = '<div style="color:var(--mute);padding:24px 0;text-align:center;">Loading global scores...</div>';
+
+    if (!db) {
+        content.innerHTML = '<div style="color:var(--mute);padding:20px;text-align:center;">Leaderboard offline.</div>';
+        return;
+    }
+
+    try {
+        let items = [];
+        try {
+            const snapshot = await db.collection('pocket_arcade').doc(gameKey).collection('scores')
+                .orderBy('score', 'desc')
+                .limit(10)
+                .get();
+            snapshot.forEach(doc => items.push(doc.data()));
+        } catch (qErr) {
+            console.warn('Falling back to direct collection fetch:', qErr);
+            const snapshot = await db.collection('pocket_arcade').doc(gameKey).collection('scores').limit(50).get();
+            snapshot.forEach(doc => items.push(doc.data()));
+            items.sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
+            items = items.slice(0, 10);
+        }
+
+        if (!items.length) {
+            content.innerHTML = '<div style="color:var(--mute);padding:24px 0;text-align:center;">No high scores yet.<br>Be the first to claim #1!</div>';
+            return;
+        }
+
+        let html = '';
+        items.forEach((data, i) => {
+            const rank = i + 1;
+            const topClass = rank === 1 ? 'top-1' : (rank === 2 ? 'top-2' : (rank === 3 ? 'top-3' : ''));
+            const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `#${rank}`));
+            html += `<div class="lb-row ${topClass}">
+                <span class="lb-rank">${medal}</span>
+                <span class="lb-name">${escapeHtml(data.name || 'ANONYMOUS')}</span>
+                <span class="lb-score">${data.score}</span>
+            </div>`;
+        });
+        content.innerHTML = html;
+    } catch (err) {
+        console.error('Leaderboard load error:', err);
+        content.innerHTML = '<div style="color:var(--mute);padding:20px;text-align:center;">Could not load scores right now.</div>';
+    }
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+}
+
+// Modal event listeners
+$('btn-open-lb').onclick = () => openLeaderboard(cur ? cur.k : 't');
+$('btn-game-lb').onclick = () => openLeaderboard(cur ? cur.k : 't');
+$('lb-close').onclick = () => $('lbm').classList.remove('open');
+$('lb-post-challenge').onclick = () => shareOnLinkedIn(games[activeLbGame] ? games[activeLbGame].name : 'Pocket Arcade', hs[bk(activeLbGame)] || 0);
+
+$('go-submit-btn').onclick = submitScore;
+$('go-linkedin-btn').onclick = () => shareOnLinkedIn(cur ? cur.name : 'Pocket Arcade', score);
+$('go-play-again').onclick = () => { closeGameOverModal(); cur.init(); st = 'play'; };
+$('go-show-lb').onclick = () => { closeGameOverModal(); openLeaderboard(cur.k); };
+$('go-menu-btn').onclick = () => { closeGameOverModal(); closeGame(); };
